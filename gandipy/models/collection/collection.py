@@ -39,7 +39,7 @@ class ElementTypeParams(BaseModel):
     }
 )
 class Field(BaseModel):
-    """ Represents a field inside a collection.
+    """Represents a field inside a collection.
 
     :param field_name: The name of the field.
     :type field_name: str, optional
@@ -108,7 +108,7 @@ class Schema(BaseModel):
 
 @JsonMap({"m": "M", "ef_construction": "efConstruction"})
 class IndexConfig(BaseModel):
-    """ Contains additional parameters for an index.
+    """Contains additional parameters for an index.
 
     :param index_type: The type of the index.
     :type index_type: str, optional
@@ -155,7 +155,7 @@ class Index(BaseModel):
 
     def __init__(
         self,
-        metric_type: str = "COSINE",
+        metric_type: str = None,
         field_name: str = None,
         index_name: str = None,
         params: IndexConfig = None,
@@ -179,7 +179,7 @@ class Index(BaseModel):
     }
 )
 class CollectionParams(BaseModel):
-    """ Contains additional parameters for a collection.
+    """Contains additional parameters for a collection.
 
     :param max_length: The maximum length of the string for a VarChar type field.
     :type max_length: int, optional
@@ -215,7 +215,6 @@ class CollectionParams(BaseModel):
 
 @JsonMap(
     {
-        "project_id": "projectId",
         "collection_name": "collectionName",
         "metric_type": "metricType",
         "id_type": "idType",
@@ -229,7 +228,7 @@ class Collection(BaseModel):
     """Collection
 
     :param project_id: ID of the project where the collection will be created.
-    :type project_id: str
+
     :param collection_name: The name of the collection to be created.
     :type collection_name: str
     :param dimension: The dimension of the vectors in the collection.
@@ -255,10 +254,8 @@ class Collection(BaseModel):
     def __init__(
         self,
         collection_name: str,
-        host: str,
-        project_id: str,
-        dimension: int = 5,
-        metric_type: str = "COSINE",
+        dimension: int = None,
+        metric_type: str = None,
         id_type: str = None,
         auto_id: bool = None,
         primary_field_name: str = None,
@@ -267,7 +264,7 @@ class Collection(BaseModel):
         index_params: List[Index] = None,
         params: CollectionParams = None,
     ):
-        self.project_id = project_id
+        self.project_id = None
         self.collection_name = collection_name
         if dimension is not None:
             self.dimension = dimension
@@ -281,11 +278,9 @@ class Collection(BaseModel):
             self.primary_field_name = primary_field_name
         if vector_field_name is not None:
             self.vector_field_name = vector_field_name
+        if params is not None:
+            self.params = self._define_object(params, CollectionParams)
         if schema is not None:
             self.schema = self._define_object(schema, Schema)
         if index_params is not None:
-            self.index_params = self._define_list(index_params, Index)
-        if params is not None:
-            self.params = self._define_object(params, CollectionParams)
-        if host is not None:
-            self.host = host
+            self.index_params = index_params

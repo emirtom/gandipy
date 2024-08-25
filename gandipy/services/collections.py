@@ -32,7 +32,7 @@ class CollectionsService(BaseService):
         :type request_body: Collection
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
-
+        collection.project_id = self.project_id
         Validator(Collection).validate(collection)
 
         serialized_request = (
@@ -49,7 +49,7 @@ class CollectionsService(BaseService):
         return response
 
     @cast_models
-    def describe(self, collection_name: str, host: str, project_id: str):
+    def describe(self, collection_name: str):
         """Returns the details of a collection.
 
         :param collection_name: The name of the collection.
@@ -57,12 +57,12 @@ class CollectionsService(BaseService):
         :param host: The host of the collection.
         :type host: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
 
         request_body = CollectionDescribeRequest(
-            collection_name=collection_name, host=host, project_id=project_id
+            collection_name=collection_name, project_id=self.project_id
         )
         Validator(CollectionDescribeRequest).validate(request_body)
 
@@ -80,7 +80,7 @@ class CollectionsService(BaseService):
         return response
 
     @cast_models
-    def drop(self, collection_name: str, host: str, project_id: str):
+    def drop(self, collection_name: str):
         """This operation drops the current collection and all data within the collection.
 
         :param collection_name: The name of the collection.
@@ -88,11 +88,11 @@ class CollectionsService(BaseService):
         :param host: The host of the collection.
         :type host: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
         request_body = CollectionDropRequest(
-            collection_name=collection_name, host=host, project_id=project_id
+            collection_name=collection_name, project_id=self.project_id
         )
         Validator(CollectionDropRequest).validate(request_body)
 
@@ -111,8 +111,6 @@ class CollectionsService(BaseService):
     def get_load_state(
         self,
         collection_name: str,
-        host: str,
-        project_id: str,
         partition_names: str = None,
     ):
         """Returns the load state of a specific collection.
@@ -122,15 +120,14 @@ class CollectionsService(BaseService):
         :param host: The host of the collection.
         :type host: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param partition_names: The names of the partitions to get the load state.
         :type partition_names: str
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
         request_body = CollectionGetLoadStateRequest(
             collection_name=collection_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
             partition_names=partition_names,
         )
         Validator(CollectionGetLoadStateRequest).validate(request_body)
@@ -150,7 +147,7 @@ class CollectionsService(BaseService):
         return response
 
     @cast_models
-    def get_stats(self, collection_name: str, host: str, project_id: str):
+    def get_stats(self, collection_name: str):
         """This operation gets the number of entities in a collection.
 
         :param collection_name: The name of the collection.
@@ -161,7 +158,7 @@ class CollectionsService(BaseService):
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
         request_body = CollectionGetStatsRequest(
-            collection_name=collection_name, host=host, project_id=project_id
+            collection_name=collection_name, project_id=self.project_id
         )
         Validator(CollectionGetStatsRequest).validate(request_body)
 
@@ -179,7 +176,7 @@ class CollectionsService(BaseService):
         return response
 
     @cast_models
-    def has(self, collection_name: str, host: str, project_id: str):
+    def has(self, collection_name: str):
         """Checks if a collection exists in the project.
 
         :param collection_name: The name of the collection.
@@ -187,11 +184,11 @@ class CollectionsService(BaseService):
         :param host: The host of the collection.
         :type host: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
         request_body = CollectionHasRequest(
-            collection_name=collection_name, host=host, project_id=project_id
+            collection_name=collection_name, project_id=self.project_id
         )
         Validator(CollectionHasRequest).validate(request_body)
 
@@ -207,16 +204,16 @@ class CollectionsService(BaseService):
         return response
 
     @cast_models
-    def list(self, project_id: str, host: str):
+    def list(self):
         """Returns a list of all collections in the specified project.
 
         :param host: The host of the collection.
         :type host: str
         :param project_id: ID of the project where the collections are.
-        :type project_id: str
+
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
-        request_body = CollectionListRequest(project_id=project_id, host=host)
+        request_body = CollectionListRequest(project_id=self.project_id)
         Validator(CollectionListRequest).validate(request_body)
 
         serialized_request = (
@@ -231,7 +228,7 @@ class CollectionsService(BaseService):
         return response
 
     @cast_models
-    def load(self, collection_name: str, host: str, project_id: str):
+    def load(self, collection_name: str):
         """Loads a collection into memory.
 
         :param collection_name: The name of the collection.
@@ -239,11 +236,11 @@ class CollectionsService(BaseService):
         :param host: The host of the collection.
         :type host: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
         request_body = CollectionLoadRequest(
-            collection_name=collection_name, host=host, project_id=project_id
+            collection_name=collection_name, project_id=self.project_id
         )
         Validator(CollectionLoadRequest).validate(request_body)
 
@@ -259,7 +256,7 @@ class CollectionsService(BaseService):
         return response
 
     @cast_models
-    def release(self, collection_name: str, host: str, project_id: str):
+    def release(self, collection_name: str):
         """Releases a collection from memory.
 
         :param collection_name: The name of the collection.
@@ -267,11 +264,11 @@ class CollectionsService(BaseService):
         :param host: The host of the collection.
         :type host: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
         request_body = CollectionReleaseRequest(
-            collection_name=collection_name, host=host, project_id=project_id
+            collection_name=collection_name, project_id=self.project_id
         )
         Validator(CollectionReleaseRequest).validate(request_body)
 
@@ -293,8 +290,6 @@ class CollectionsService(BaseService):
         self,
         collection_name: str,
         new_collection_name: str,
-        host: str,
-        project_id: str,
     ):
         """This operation renames an existing collection and optionally moves the collection to a new database.
 
@@ -304,14 +299,13 @@ class CollectionsService(BaseService):
         :param host: The host of the collection.
         :type host: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
         request_body = CollectionRenameRequest(
             collection_name=collection_name,
             new_collection_name=new_collection_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
         )
         Validator(CollectionRenameRequest).validate(request_body)
 

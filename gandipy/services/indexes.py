@@ -17,8 +17,6 @@ class IndexesService(BaseService):
     def create(
         self,
         collection_name: str,
-        host: str,
-        project_id: str,
         index_params: List[Index] = None,
     ):
         """This creates a named index for a target field, which can either be a vector field or a scalar field.
@@ -28,7 +26,7 @@ class IndexesService(BaseService):
         :param host: The host of the collection.
         :type host: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param index_params: List of indexes to creat inside the collection.
         :type index_params: List[Index]
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
@@ -36,8 +34,7 @@ class IndexesService(BaseService):
 
         request_body = IndexRequest(
             collection_name=collection_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
             index_params=index_params,
         )
 
@@ -55,9 +52,7 @@ class IndexesService(BaseService):
         return response
 
     @cast_models
-    def describe(
-        self, collection_name: str, index_name: str, host: str, project_id: str
-    ):
+    def describe(self, collection_name: str, index_name: str):
         """Returns the details of an index.
 
         :param collection_name: The name of the collection.
@@ -67,15 +62,14 @@ class IndexesService(BaseService):
         :param host: The host name.
         :type host: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
 
         request_body = IndexDescribeRequest(
             collection_name=collection_name,
             index_name=index_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
         )
 
         Validator(IndexDescribeRequest).validate(request_body)
@@ -92,7 +86,7 @@ class IndexesService(BaseService):
         return response
 
     @cast_models
-    def drop(self, collection_name: str, index_name: str, host: str, project_id: str):
+    def drop(self, collection_name: str, index_name: str):
         """This operation drops index from a specified collection.
 
         :param collection_name: The name of the collection.
@@ -102,15 +96,14 @@ class IndexesService(BaseService):
         :param host: The host name.
         :type host: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
 
         request_body = IndexDropRequest(
             collection_name=collection_name,
             index_name=index_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
         )
 
         Validator(IndexDropRequest).validate(request_body)
@@ -127,7 +120,7 @@ class IndexesService(BaseService):
         return response
 
     @cast_models
-    def list(self, collection_name: str, host: str, project_id: str):
+    def list(self, collection_name: str):
         """Returns a list of all indexes in the specified collection.
 
         :param collection_name: The name of the collection.
@@ -135,14 +128,13 @@ class IndexesService(BaseService):
         :param host: The host name.
         :type host: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
 
         request_body = IndexListRequest(
             collection_name=collection_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
         )
 
         Validator(IndexListRequest).validate(request_body)

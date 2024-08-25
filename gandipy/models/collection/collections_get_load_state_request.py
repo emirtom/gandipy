@@ -6,7 +6,6 @@ from ..base import BaseModel
 
 @JsonMap(
     {
-        "project_id": "projectId",
         "collection_name": "collectionName",
         "partition_names": "partitionNames",
     }
@@ -14,8 +13,7 @@ from ..base import BaseModel
 class CollectionGetLoadStateRequest(BaseModel):
     """CollectionGetLoadStateRequest
 
-    :param project_id: project_id
-    :type project_id: str
+
     :param collection_name: collection_name
     :type collection_name: str
     :param partition_names: partition_names, defaults to None
@@ -27,13 +25,10 @@ class CollectionGetLoadStateRequest(BaseModel):
     def __init__(
         self,
         collection_name: str,
-        host: str,
         project_id: str,
         partition_names: str = None,
     ):
-        self.project_id = project_id
         self.collection_name = collection_name
         if partition_names is not None:
             self.partition_names = partition_names
-        if host is not None:
-            self.host = host
+        self.project_id = project_id

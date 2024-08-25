@@ -7,7 +7,6 @@ from ..base import BaseModel
 
 @JsonMap(
     {
-        "project_id": "projectId",
         "collection_name": "collectionName",
         "partition_names": "partitionNames",
         "output_fields": "outputFields",
@@ -16,8 +15,8 @@ from ..base import BaseModel
 class VectorsQueryRequest(BaseModel):
     """VectorsQueryRequest
 
-    :param project_id: project_id
-    :type project_id: str
+
+
     :param collection_name: collection_name
     :type collection_name: str
     :param partition_names: partition_names, defaults to None
@@ -36,8 +35,8 @@ class VectorsQueryRequest(BaseModel):
         partition_names: List[str] = None,
         output_fields: List[str] = None,
     ):
-        self.project_id = project_id
         self.collection_name = collection_name
+        self.project_id = project_id
         if partition_names is not None:
             self.partition_names = partition_names
         self.filter = filter

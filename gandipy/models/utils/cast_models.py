@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import get_origin, get_args, Union
 from inspect import isclass
-from ...base import OneOfBaseModel
+from ..base import OneOfBaseModel
 
 
 def cast_models(func):

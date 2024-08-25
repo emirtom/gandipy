@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Any
 from ..utils.json_map import JsonMap
 from ..base import BaseModel
 
@@ -28,7 +28,7 @@ class Params(BaseModel):
         "ignore_growing": "ignoreGrowing",
     }
 )
-class SearchParams(BaseModel):
+class Search(BaseModel):
     """SearchItem
 
     :param data: data, defaults to None
@@ -82,10 +82,34 @@ class SearchParams(BaseModel):
         if params is not None:
             self.params = self._define_object(params, Params)
 
+@JsonMap()
+class Ranker(BaseModel):
+    """Ranker
+
+    :param strategy: strategy, defaults to None
+    :type strategy: str, optional
+    :param k: k, defaults to None
+    :type k: str, optional
+    """
+
+    def __init__(
+        self,
+        strategy: str = None,
+        k: str = None,
+        weights: List[float] = None
+    ):
+        if strategy is not None:
+            self.strategy = strategy
+        self.params = dict()
+        if k is not None:
+            self.params["k"] = k
+        if weights is not None:
+            self.params["weights"] = weights
+
+
 
 @JsonMap(
     {
-        "project_id": "projectId",
         "collection_name": "collectionName",
         "partition_names": "partitionNames",
         "output_fields": "outputFields",
@@ -94,14 +118,14 @@ class SearchParams(BaseModel):
 class VectorsHybridSearchRequest(BaseModel):
     """VectorsHybridSearchRequest
 
-    :param project_id: project_id, defaults to None
-    :type project_id: str
+    , defaults to None
+
     :param collection_name: collection_name
     :type collection_name: str
     :param partition_names: partition_names, defaults to None
     :type partition_names: List[str], optional
     :param search: search, defaults to None
-    :type search: List[SearchParams], optional
+    :type search: List[Search], optional
     :param rerank: rerank, defaults to None
     :type rerank: str, optional
     :param limit: limit, defaults to None
@@ -115,19 +139,19 @@ class VectorsHybridSearchRequest(BaseModel):
         collection_name: str,
         project_id: str = None,
         partition_names: List[str] = None,
-        search: List[SearchParams] = None,
-        rerank: str = None,
+        search: List[Search] = None,
+        rerank: Ranker = None,
         limit: int = None,
         output_fields: List[str] = None,
     ):
-        self.project_id = project_id
         self.collection_name = collection_name
+        self.project_id = project_id
         if partition_names is not None:
             self.partition_names = partition_names
         if search is not None:
-            self.search = self._define_list(search, SearchParams)
+            self.search = self._define_list(search, Search)
         if rerank is not None:
-            self.rerank = rerank
+            self.rerank = self._define_object(rerank, Ranker)
         if limit is not None:
             self.limit = limit
         if output_fields is not None:

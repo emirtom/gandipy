@@ -3,19 +3,24 @@
 from .services.collections import CollectionsService
 from .services.indexes import IndexesService
 from .services.vectors import VectorsService
+from .services.partitions import PartitionsService
 from .net.environment import Environment
 
 
 class Gandi:
     def __init__(
-        self, access_token: str = None, base_url: str = Environment.DEFAULT.value
+        self,
+        project_id: str,
+        access_token: str = None,
+        base_url: str = Environment.DEFAULT.value,
     ):
         """
         Initializes Gandi the SDK class.
         """
-        self.collections = CollectionsService(base_url=base_url)
-        self.indexes = IndexesService(base_url=base_url)
-        self.vectors = VectorsService(base_url=base_url)
+        self.collections = CollectionsService(base_url=base_url, project_id=project_id)
+        self.indexes = IndexesService(base_url=base_url, project_id=project_id)
+        self.vectors = VectorsService(base_url=base_url, project_id=project_id)
+        self.partitions = PartitionsService(base_url=base_url, project_id=project_id)
         self.set_access_token(access_token)
 
     def set_base_url(self, base_url):
@@ -25,6 +30,7 @@ class Gandi:
         self.collections.set_base_url(base_url)
         self.indexes.set_base_url(base_url)
         self.vectors.set_base_url(base_url)
+        self.partitions.set_base_url(base_url)
 
         return self
 
@@ -35,6 +41,7 @@ class Gandi:
         self.collections.set_access_token(access_token)
         self.indexes.set_access_token(access_token)
         self.vectors.set_access_token(access_token)
+        self.partitions.set_access_token(access_token)
 
         return self
 

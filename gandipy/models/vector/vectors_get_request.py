@@ -21,7 +21,6 @@ Id = Union[str, List[str], int, List[int]]
 
 @JsonMap(
     {
-        "project_id": "projectId",
         "collection_name": "collectionName",
         "id_": "id",
         "partition_names": "partitionNames",
@@ -31,8 +30,8 @@ Id = Union[str, List[str], int, List[int]]
 class VectorsGetRequest(BaseModel):
     """VectorsGetRequest
 
-    :param project_id: project_id
-    :type project_id: str
+
+
     :param collection_name: collection_name
     :type collection_name: str
     :param id_: id_, defaults to None
@@ -47,18 +46,15 @@ class VectorsGetRequest(BaseModel):
         self,
         collection_name: str,
         project_id: str,
-        id_: Id = None,
-        host: str = "",
+        id: List[int] = None,
         partition_names: List[str] = None,
         output_fields: List[str] = None,
     ):
-        self.project_id = project_id
         self.collection_name = collection_name
-        if id_ is not None:
-            self.id_ = IdGuard.return_one_of(id_)
+        self.project_id = project_id
+        if id is not None:
+            self.id = id
         if partition_names is not None:
             self.partition_names = partition_names
         if output_fields is not None:
             self.output_fields = output_fields
-        if host is not None:
-            self.host = host

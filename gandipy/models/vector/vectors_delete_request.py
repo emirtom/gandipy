@@ -6,7 +6,6 @@ from ..base import BaseModel
 
 @JsonMap(
     {
-        "project_id": "projectId",
         "collection_name": "collectionName",
         "partition_name": "partitionName",
     }
@@ -15,7 +14,7 @@ class VectorsDeleteRequest(BaseModel):
     """VectorsDeleteRequest
 
     :param project_id: ID of the project where the collection is.
-    :type project_id: str
+
     :param collection_name: The name of the collection.
     :type collection_name: str
     :param filter: It can be used to match IDs or used as a scalar filtering condition to specify entities.
@@ -28,14 +27,11 @@ class VectorsDeleteRequest(BaseModel):
         self,
         collection_name: str,
         filter: str,
-        host: str,
         project_id: str,
         partition_name: str = None,
     ):
-        self.project_id = project_id
         self.collection_name = collection_name
         self.filter = filter
+        self.project_id = project_id
         if partition_name is not None:
             self.partition_name = partition_name
-        if host is not None:
-            self.host = host

@@ -6,7 +6,6 @@ from ..base import BaseModel
 
 @JsonMap(
     {
-        "project_id": "projectId",
         "collection_name": "collectionName",
         "index_name": "indexName",
     }
@@ -14,18 +13,15 @@ from ..base import BaseModel
 class IndexDropRequest(BaseModel):
     """IndexDropRequest
 
-    :param project_id: project_id
-    :type project_id: str
+
+
     :param collection_name: collection_name
     :type collection_name: str
     :param index_name: index_name
     :type index_name: str
     """
 
-    def __init__(
-        self, collection_name: str, host: str, index_name: str, project_id: str
-    ):
-        self.project_id = project_id
+    def __init__(self, collection_name: str, index_name: str, project_id: str):
         self.collection_name = collection_name
         self.index_name = index_name
-        self.host = host
+        self.project_id = project_id

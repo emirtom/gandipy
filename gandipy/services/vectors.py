@@ -6,7 +6,7 @@ from .utils.base_service import BaseService
 from ..net.transport.serializer import Serializer
 from ..models.utils.cast_models import cast_models
 from ..models.vector.vectors_upsert_request import VectorsUpsertRequest
-from ..models.vector.vectors_search_request import VectorsSearchRequest, SearchParams
+from ..models.vector.vectors_search_request import VectorsSearchRequest, Search
 from ..models.vector.vectors_query_request import VectorsQueryRequest
 from ..models.vector.vectors_insert_request import VectorsInsertRequest
 from ..models.vector.vectors_get_request import VectorsGetRequest
@@ -20,15 +20,13 @@ class VectorsService(BaseService):
     def delete(
         self,
         collection_name: str,
-        project_id: str,
         filter: str,
-        host: str,
         partition_name: str = None,
     ):
         """This operation deletes entities by their IDs or with a boolean expression.
 
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param collection_name: The name of the collection.
         :type collection_name: str
         :param filter: Filter that can be used to match IDs or used as a scalar filtering condition to specify entities.
@@ -40,10 +38,9 @@ class VectorsService(BaseService):
 
         request_body = VectorsDeleteRequest(
             collection_name=collection_name,
-            project_id=project_id,
+            project_id=self.project_id,
             filter=filter,
             partition_name=partition_name,
-            host=host,
         )
 
         Validator(VectorsDeleteRequest).validate(request_body)
@@ -63,16 +60,14 @@ class VectorsService(BaseService):
     def get(
         self,
         collection_name: str,
-        project_id: str,
-        id: Union[int, str, List[int], List[str]] = None,
-        host: str = "",
+        id: List[int] = None,
         partition_names: List[str] = None,
         output_fields: List[str] = None,
     ):
         """This operation gets vectors by their IDs.
 
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param collection_name: The name of the collection.
         :type collection_name: str
         :param id: ID of the vectors to return.
@@ -84,10 +79,9 @@ class VectorsService(BaseService):
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
         request_body = VectorsGetRequest(
-            project_id=project_id,
+            project_id=self.project_id,
             collection_name=collection_name,
-            id_=id,
-            host=host,
+            id=id,
             partition_names=partition_names,
             output_fields=output_fields,
         )
@@ -108,16 +102,14 @@ class VectorsService(BaseService):
     @cast_models
     def insert(
         self,
-        project_id: str,
         collection_name: str,
-        host: str,
-        data: Union[dict, List[dict]] = {},
+        data: Union[dict, List[dict]] = None,
         partition_name: str = None,
     ):
         """This operation inserts vectors into a specified collection.
 
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param collection_name: The name of the collection to insert.
         :type collection_name: str
         :param data: The data to insert into the collection. It should match the schema of the given collection.
@@ -129,10 +121,9 @@ class VectorsService(BaseService):
 
         request_body = VectorsInsertRequest(
             collection_name=collection_name,
-            project_id=project_id,
+            project_id=self.project_id,
             partition_name=partition_name,
             data=data,
-            host=host,
         )
 
         Validator(VectorsInsertRequest).validate(request_body)
@@ -151,7 +142,6 @@ class VectorsService(BaseService):
     @cast_models
     def query(
         self,
-        project_id: str,
         collection_name: str,
         filter: str,
         partition_names: List[str] = None,
@@ -160,7 +150,7 @@ class VectorsService(BaseService):
         """This operation queries vectors in a specified collection.
 
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param collection_name: The name of the collection to query.
         :type collection_name: str
         :param filter: Filter that can be used to match IDs or used as a scalar filtering condition to specify entities.
@@ -173,7 +163,7 @@ class VectorsService(BaseService):
         """
 
         request_body = VectorsQueryRequest(
-            project_id=project_id,
+            project_id=self.project_id,
             collection_name=collection_name,
             filter=filter,
             partition_names=partition_names,
@@ -197,28 +187,28 @@ class VectorsService(BaseService):
     def search(
         self,
         collection_name: str,
-        project_id: str,
+        data: List[float],
         partition_names: List[str] = None,
         output_fields: List[str] = None,
-        anss_field: str = None,
+        anns_field: str = None,
         limit: int = None,
         offset: int = None,
         filter: str = None,
         grouping_field: str = None,
-        search_params: SearchParams = None,
+        search_params: Search = None,
     ):
         """This operation searches vectors in a specified collection.
 
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param collection_name: The name of the collection to query.
         :type collection_name: str
         :param partition_names: Partitions to get the vectors from.
         :type partition_names: List[str], optional
         :param output_fields: The fields to return with data.
         :type output_fields: List[str], optional
-        :param anss_field: The name of the field that contains the vectors.
-        :type anss_field: str, optional
+        :param anns_field: The name of the field that contains the vectors.
+        :type anns_field: str, optional
         :param limit: The maximum number of results to return from the search.
         :type limit: int, optional
         :param offset: The number of results to skip before starting to return results. Used for pagination.
@@ -228,16 +218,17 @@ class VectorsService(BaseService):
         :param grouping_field: The field by which to group the search results.
         :type grouping_field: str, optional
         :param search_params: Additional parameters for the search
-        :type search_params: SearchParams, optional
+        :type search_params: Search, optional
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
 
         request_body = VectorsSearchRequest(
-            project_id=project_id,
+            project_id=self.project_id,
             collection_name=collection_name,
+            data=data,
             partition_names=partition_names,
             output_fields=output_fields,
-            anss_field=anss_field,
+            anns_field=anns_field,
             limit=limit,
             offset=offset,
             filter=filter,
@@ -259,13 +250,43 @@ class VectorsService(BaseService):
         return response
 
     @cast_models
-    def hybrid_search(self, request_body: VectorsHybridSearchRequest):
+    def hybrid_search(
+        self,
+        collection_name: str,
+        partition_names: List[str] = None,
+        search: List[Search] = None,
+        rerank: str = None,
+        limit: int = None,
+        output_fields: List[str] = None,
+    ):
         """This operation searches vectors in a specified collection.
 
-        :param request_body: The request body.
-        :type request_body: VectorsHybridSearchRequest
+        :param project_id: ID of the project where the collection is.
+
+        :param collection_name: The name of the collection to query.
+        :type collection_name: str
+        :param partition_names: Partitions to search the vectors inside.
+        :type partition_names: List[str], optional
+        :param search: Parameters for each search.
+        :type search: List[Search], optional
+        :param rerank: Reranking strategy used in final step to compare searches.
+        :type rerank: str, optional
+        :param limit: The maximum number of vectors to return with the search.
+        :type limit: int, optional
+        :param output_fields: The fields to return with data.
+        :type output_fields: List[str], optional
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
+
+        request_body = VectorsHybridSearchRequest(
+            collection_name=collection_name,
+            project_id=self.project_id,
+            partition_names=partition_names,
+            search=search,
+            rerank=rerank,
+            limit=limit,
+            output_fields=output_fields,
+        )
 
         Validator(VectorsHybridSearchRequest).validate(request_body)
 
@@ -285,19 +306,17 @@ class VectorsService(BaseService):
     @cast_models
     def upsert(
         self,
-        project_id: str,
         collection_name: str,
-        host: str,
-        data: Union[dict, List[dict]] = {},
+        data: Union[dict, List[dict]] = None,
         partition_name: str = None,
     ):
         """This operation inserts vectors into a specified collection and updates the existing ones.
 
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param collection_name: The name of the collection to upsert.
         :type collection_name: str
-        :param data: The data to upsert into the collection. It should match the schema of the given collection.
+        :param data: The data to insert into the collection. It should match the schema of the given collection.
         :type data: dict, List[dict]
         :param partition_names: The name of a partition in the current collection. If specified, the data is to be upserted into the specified partition.
         :type partition_name: str, optional
@@ -306,10 +325,9 @@ class VectorsService(BaseService):
 
         request_body = VectorsUpsertRequest(
             collection_name=collection_name,
-            project_id=project_id,
+            project_id=self.project_id,
             partition_name=partition_name,
             data=data,
-            host=host,
         )
 
         Validator(VectorsUpsertRequest).validate(request_body)

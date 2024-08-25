@@ -6,7 +6,6 @@ from ..base import BaseModel
 
 @JsonMap(
     {
-        "project_id": "projectId",
         "collection_name": "collectionName",
         "new_collection_name": "newCollectionName",
     }
@@ -14,8 +13,8 @@ from ..base import BaseModel
 class CollectionRenameRequest(BaseModel):
     """CollectionRenameRequest
 
-    :param project_id: project_id
-    :type project_id: str
+
+
     :param collection_name: collection_name
     :type collection_name: str
     :param new_collection_name: new_collection_name
@@ -26,11 +25,9 @@ class CollectionRenameRequest(BaseModel):
         self,
         collection_name: str,
         new_collection_name: str,
-        host: str,
         project_id: str,
     ):
-        self.project_id = project_id
 
         self.collection_name = collection_name
         self.new_collection_name = new_collection_name
-        self.host = host
+        self.project_id = project_id

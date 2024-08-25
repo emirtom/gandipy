@@ -49,7 +49,7 @@ class HttpHandler(BaseHandler):
 
             if response.status >= 400:
                 return None, RequestError(
-                    message=f"{response.status} error in request to: {request.url}",
+                    message=dict(response.body)["message"],
                     status=response.status,
                     response=response,
                 )

@@ -54,7 +54,7 @@ class Index(BaseModel):
 
     def __init__(
         self,
-        metric_type: str = None,
+        metric_type: str = "COSINE",
         field_name: str = None,
         index_name: str = None,
         params: IndexConfig = None,
@@ -71,7 +71,6 @@ class Index(BaseModel):
 
 @JsonMap(
     {
-        "project_id": "projectId",
         "collection_name": "collectionName",
         "index_params": "indexParams",
     }
@@ -79,8 +78,8 @@ class Index(BaseModel):
 class IndexRequest(BaseModel):
     """IndexRequest
 
-    :param project_id: project_id
-    :type project_id: str
+
+
     :param collection_name: collection_name
     :type collection_name: str
     :param index_params: index_params, defaults to None
@@ -90,12 +89,10 @@ class IndexRequest(BaseModel):
     def __init__(
         self,
         collection_name: str,
-        host: str,
         project_id: str,
         index_params: List[Index] = None,
     ):
-        self.project_id = project_id
         self.collection_name = collection_name
-        self.host = host
+        self.project_id = project_id
         if index_params is not None:
             self.index_params = self._define_list(index_params, Index)

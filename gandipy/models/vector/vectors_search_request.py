@@ -23,8 +23,8 @@ class SearchParamsParams(BaseModel):
 
 
 @JsonMap({"metric_type": "metricType"})
-class SearchParams(BaseModel):
-    """SearchParams
+class Search(BaseModel):
+    """Search
 
     :param metric_type: metric_type, defaults to None
     :type metric_type: str, optional
@@ -32,21 +32,21 @@ class SearchParams(BaseModel):
     :type params: SearchParamsParams, optional
     """
 
-    def __init__(self, metric_type: str = None, radius: int = None, range_filter: int = None):
+    def __init__(
+        self, metric_type: str = None, radius: int = None, range_filter: int = None
+    ):
         if metric_type is not None:
             self.metric_type = metric_type
         if radius or range_filter:
             self.params = SearchParamsParams(radius=radius, range_filter=range_filter)
-        
 
 
 @JsonMap(
     {
-        "project_id": "projectId",
         "collection_name": "collectionName",
         "partition_names": "partitionNames",
         "output_fields": "outputFields",
-        "anss_field": "anssField",
+        "anns_field": "annsField",
         "grouping_field": "groupingField",
         "search_params": "searchParams",
     }
@@ -56,16 +56,16 @@ class SearchParams(BaseModel):
 class VectorsSearchRequest(BaseModel):
     """VectorsSearchRequest
 
-    :param project_id: project_id
-    :type project_id: str
+
+
     :param collection_name: collection_name
     :type collection_name: str
     :param partition_names: partition_names, defaults to None
     :type partition_names: List[str], optional
     :param output_fields: output_fields, defaults to None
     :type output_fields: List[str], optional
-    :param anss_field: anss_field, defaults to None
-    :type anss_field: str, optional
+    :param anns_field: anns_field, defaults to None
+    :type anns_field: str, optional
     :param limit: limit, defaults to None
     :type limit: int, optional
     :param offset: offset, defaults to None
@@ -75,30 +75,32 @@ class VectorsSearchRequest(BaseModel):
     :param grouping_field: grouping_field, defaults to None
     :type grouping_field: str, optional
     :param search_params: search_params, defaults to None
-    :type search_params: SearchParams, optional
+    :type search_params: Search, optional
     """
 
     def __init__(
         self,
         collection_name: str,
         project_id: str,
+        data: List[float],
         partition_names: List[str] = None,
         output_fields: List[str] = None,
-        anss_field: str = None,
+        anns_field: str = None,
         limit: int = None,
         offset: int = None,
         filter: str = None,
         grouping_field: str = None,
-        search_params: SearchParams = None,
+        search_params: Search = None,
     ):
-        self.project_id = project_id
         self.collection_name = collection_name
+        self.data = data
+        self.project_id = project_id
         if partition_names is not None:
             self.partition_names = partition_names
         if output_fields is not None:
             self.output_fields = output_fields
-        if anss_field is not None:
-            self.anss_field = anss_field
+        if anns_field is not None:
+            self.anns_field = anns_field
         if limit is not None:
             self.limit = limit
         if offset is not None:
@@ -108,4 +110,4 @@ class VectorsSearchRequest(BaseModel):
         if grouping_field is not None:
             self.grouping_field = grouping_field
         if search_params is not None:
-            self.search_params = self._define_object(search_params, SearchParams)
+            self.search_params = self._define_object(search_params, Search)

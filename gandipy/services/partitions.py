@@ -12,18 +12,16 @@ from ..models.partition.partition_load_request import PartitionLoadRequest
 from ..models.partition.partition_release_request import PartitionReleaseRequest
 
 
-class IndexesService(BaseService):
+class PartitionsService(BaseService):
 
     @cast_models
-    def create(
-        self, collection_name: str, host: str, project_id: str, partition_name: str
-    ):
+    def create(self, collection_name: str, partition_name: str):
         """Creates a new partition inside your collection.
 
         :param collection_name: The name of the collection to create the partition inside.
         :type collection_name: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param partition_name: The name of the created partition.
         :type partition_name: str
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
@@ -31,8 +29,7 @@ class IndexesService(BaseService):
 
         request_body = PartitionCreateRequest(
             collection_name=collection_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
             partition_name=partition_name,
         )
 
@@ -50,15 +47,13 @@ class IndexesService(BaseService):
         return response
 
     @cast_models
-    def drop(
-        self, collection_name: str, host: str, project_id: str, partition_name: str
-    ):
+    def drop(self, collection_name: str, partition_name: str):
         """Drops a specific partition inside your collection. Ensure that the partition is released before dropping.
 
         :param collection_name: The name of the collection where the specified partition is.
         :type collection_name: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param partition_name: The name of the partition to drop.
         :type partition_name: str
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
@@ -66,8 +61,7 @@ class IndexesService(BaseService):
 
         request_body = PartitionDropRequest(
             collection_name=collection_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
             partition_name=partition_name,
         )
 
@@ -85,15 +79,13 @@ class IndexesService(BaseService):
         return response
 
     @cast_models
-    def get_stats(
-        self, collection_name: str, host: str, project_id: str, partition_name: str
-    ):
+    def get_stats(self, collection_name: str, partition_name: str):
         """Returns the number of rows in the given partition inside your collection.
 
         :param collection_name: The name of the collection where the specified partition is.
         :type collection_name: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param partition_name: The name of the partition to get the number of entities of.
         :type partition_name: str
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
@@ -101,8 +93,7 @@ class IndexesService(BaseService):
 
         request_body = PartitionGetStatsRequest(
             collection_name=collection_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
             partition_name=partition_name,
         )
 
@@ -122,15 +113,13 @@ class IndexesService(BaseService):
         return response
 
     @cast_models
-    def has(
-        self, collection_name: str, host: str, project_id: str, partition_name: str
-    ):
+    def has(self, collection_name: str, partition_name: str):
         """Returns whether the given partition exist inside your collection.
 
         :param collection_name: The name of the collection where the specified partition is.
         :type collection_name: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param partition_name: The name of the partition to check whether it exits.
         :type partition_name: str
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
@@ -138,8 +127,7 @@ class IndexesService(BaseService):
 
         request_body = PartitionHasRequest(
             collection_name=collection_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
             partition_name=partition_name,
         )
 
@@ -157,18 +145,18 @@ class IndexesService(BaseService):
         return response
 
     @cast_models
-    def list(self, collection_name: str, host: str, project_id: str):
+    def list(self, collection_name: str):
         """Returns the list of the partitions inside your collection.
 
         :param collection_name: The name of the collection to list the partitions inside it.
         :type collection_name: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
         """
 
         request_body = PartitionListRequest(
-            collection_name=collection_name, host=host, project_id=project_id
+            collection_name=collection_name, project_id=self.project_id
         )
 
         Validator(PartitionListRequest).validate(request_body)
@@ -188,8 +176,6 @@ class IndexesService(BaseService):
     def load(
         self,
         collection_name: str,
-        host: str,
-        project_id: str,
         partition_names: List[str],
     ):
         """Loads the data of the given partitions into memory.
@@ -197,7 +183,7 @@ class IndexesService(BaseService):
         :param collection_name: The name of the collection where the partitions is.
         :type collection_name: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param partition_name: Names of the partitions to load into memory.
         :type partition_name: str
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
@@ -205,8 +191,7 @@ class IndexesService(BaseService):
 
         request_body = PartitionLoadRequest(
             collection_name=collection_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
             partition_names=partition_names,
         )
 
@@ -227,8 +212,6 @@ class IndexesService(BaseService):
     def release(
         self,
         collection_name: str,
-        host: str,
-        project_id: str,
         partition_names: List[str],
     ):
         """Releases the data of the given partitions from memory.
@@ -236,7 +219,7 @@ class IndexesService(BaseService):
         :param collection_name: The name of the collection where the partitions is.
         :type collection_name: str
         :param project_id: ID of the project where the collection is.
-        :type project_id: str
+
         :param partition_name: Names of the partitions to release from memory.
         :type partition_name: str
         :raises RequestError: Raised when a request fails, with optional HTTP status code and details.
@@ -244,8 +227,7 @@ class IndexesService(BaseService):
 
         request_body = PartitionReleaseRequest(
             collection_name=collection_name,
-            host=host,
-            project_id=project_id,
+            project_id=self.project_id,
             partition_names=partition_names,
         )
 

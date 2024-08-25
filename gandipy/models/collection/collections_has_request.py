@@ -4,17 +4,15 @@ from ..utils.json_map import JsonMap
 from ..base import BaseModel
 
 
-@JsonMap({"project_id": "projectId", "collection_name": "collectionName"})
+@JsonMap({"collection_name": "collectionName"})
 class CollectionHasRequest(BaseModel):
     """CollectionHasRequest
 
-    :param project_id: project_id
-    :type project_id: str
+
     :param collection_name: collection_name
     :type collection_name: str
     """
 
-    def __init__(self, collection_name: str, host: str, project_id: str):
-        self.project_id = project_id
+    def __init__(self, collection_name: str, project_id: str):
         self.collection_name = collection_name
-        self.host = host
+        self.project_id = project_id

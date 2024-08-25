@@ -20,13 +20,14 @@ class BaseService:
     :ivar dict _default_headers: A dictionary of default headers.
     """
 
-    def __init__(self, base_url: str) -> None:
+    def __init__(self, base_url: str, project_id: str) -> None:
         """
         Initializes a BaseService instance.
 
         :param str base_url: The base URL for the service. Defaults to None.
         """
         self.base_url = base_url
+        self.project_id = project_id
         self._default_headers = DefaultHeaders()
 
         self._request_handler = self._get_request_handler()

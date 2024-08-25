@@ -28,7 +28,6 @@ VectorsInsertRequestData = Union[
 
 @JsonMap(
     {
-        "project_id": "projectId",
         "collection_name": "collectionName",
         "partition_name": "partitionName",
     }
@@ -36,8 +35,8 @@ VectorsInsertRequestData = Union[
 class VectorsInsertRequest(BaseModel):
     """VectorsInsertRequest
 
-    :param project_id: project_id
-    :type project_id: str
+
+
     :param collection_name: collection_name
     :type collection_name: str
     :param partition_name: partition_name, defaults to None
@@ -52,9 +51,7 @@ class VectorsInsertRequest(BaseModel):
         project_id: str,
         partition_name: str = None,
         data=None,
-        host: str = None,
     ):
-        self.project_id = project_id
         self.collection_name = collection_name
         if partition_name is not None:
             self.partition_name = partition_name
@@ -62,5 +59,4 @@ class VectorsInsertRequest(BaseModel):
             if isinstance(data, pd.DataFrame):
                 data = data.to_dict(orient="records")
             self.data = data
-        if host is not None:
-            self.host = host
+        self.project_id = project_id
