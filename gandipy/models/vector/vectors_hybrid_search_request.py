@@ -82,7 +82,8 @@ class Search(BaseModel):
         if params is not None:
             self.params = self._define_object(params, Params)
 
-@JsonMap()
+
+@JsonMap({})
 class Ranker(BaseModel):
     """Ranker
 
@@ -93,10 +94,7 @@ class Ranker(BaseModel):
     """
 
     def __init__(
-        self,
-        strategy: str = None,
-        k: str = None,
-        weights: List[float] = None
+        self, strategy: str = None, k: str = None, weights: List[float] = None
     ):
         if strategy is not None:
             self.strategy = strategy
@@ -105,7 +103,6 @@ class Ranker(BaseModel):
             self.params["k"] = k
         if weights is not None:
             self.params["weights"] = weights
-
 
 
 @JsonMap(
